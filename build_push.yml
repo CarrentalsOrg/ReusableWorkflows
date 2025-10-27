@@ -28,12 +28,12 @@ jobs:
           username: ${{ inputs.docker_user_name }}
           password: ${{ secrets.docker_access_token }}
 
-      - name: Extract branch name
+      - name: Extract metadata
         shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
-
-      - name: Choose tags
+        run: |
+          echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+          echo "branch_tag =${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT"
+        id: extract_metadata
 
       - name: Docker meta
         id: meta
@@ -41,7 +41,10 @@ jobs:
         with:
           images: ${{ inputs.docker_user_name }}/${{ inputs.dockerhub_repo}}
           tags: |
-            ${{inputs.iamge_tag}}
+            ${{steps.extract_metadata.branch}}
+            ${{steps.extract_metadata.branch_tag}}
+            ${{github.sha}}
+            
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -51,5 +54,4 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags:  ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          file: ${{inputs.dockerfile}}
+          file: ${{extract_branch.outputs.branch == "master" && Dockerfile || Dockerfile.dev}}

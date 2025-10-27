@@ -51,4 +51,4 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags:  ${{ steps.meta.outputs.tags }}
-          file: ${{steps.extract_metadata.outputs.branch == 'master' && Dockerfile || Dockerfile.dev}}
+          file: ${{steps.extract_metadata.outputs.branch == 'master' && 'Dockerfile' || 'Dockerfile.dev'}}

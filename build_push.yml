@@ -11,10 +11,6 @@ on:
         description: "Dockerhub repo"
         type: string
         required: true
-      dockerfile:
-        description: "Dockerfile"
-        type: string
-        required: true
     secrets:
       docker_access_token:
         required: true

@@ -38,8 +38,8 @@ jobs:
         with:
           images: ${{ inputs.docker_user_name }}/${{ inputs.dockerhub_repo}}
           tags: |
-            ${{steps.extract_metadata.branch}}
-            ${{steps.extract_metadata.branch_tag}}
+            ${{steps.extract_metadata.outputs.branch}}
+            ${{steps.extract_metadata.outputs.branch_tag}}
             ${{github.sha}}
             
 
@@ -51,4 +51,4 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags:  ${{ steps.meta.outputs.tags }}
-          file: ${{extract_branch.outputs.branch == 'master' && Dockerfile || Dockerfile.dev}}
+          file: ${{steps.extract_metadata.outputs.branch == 'master' && Dockerfile || Dockerfile.dev}}

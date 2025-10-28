@@ -1,0 +1,53 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+        description: "Enviorment you wish to deploy to"
+        default: staging
+      image:
+        type: string
+        required: true
+        description: "Tag or sha of the image you wish to deploy"
+      dockerhub_repo:
+        type: string
+        required: true
+        description: "Docker hub repo from which to pull the image"
+    secrets:
+      gitops_token:
+        required: true
+
+jobs:
+  update-manifest:
+    environment: ${{github.event.inputs.environment}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: TiagoMadeira/CarrentalsK8sConfig
+          ref: master
+          token: ${{secrets.gitops_token}}
+      
+      - name: setup git config
+        shell: bash
+        run: |
+          git config --global user.email  "${{github.user_email}}"
+          git config --global user.name "${{github.username}}"
+          echo ${{github.event.inputs.image}}
+      
+      - name: update gitops repository
+        shell: bash
+        run: |
+          cd ${{github.event.inputs.environment}}
+
+          sed -i "s|image: tiagomadeiradock/${{github.event.inputs.dockerhub_repo}}:.*|image: tiagomadeiradock/${{github.event.inputs.dockerhub_repo}}:${{github.event.inputs.image}}|g" deployment.yml
+
+          #commit changes
+          git add ${{github.event.inputs.environment}}/deployment.yml
+          git commit -m "Deploy image ${{github.event.inputs.image}} to ${{github.event.inputs.environment}} environment"
+          
+          #push
+          git push origin master

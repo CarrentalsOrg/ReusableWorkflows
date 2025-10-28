@@ -33,8 +33,8 @@ jobs:
       - name: setup git config
         shell: bash
         run: |
-          git config --global user.email  "${{github.user_email}}"
-          git config --global user.name "${{github.username}}"
+          git config --global user.email tiagopmadeira@gmail.com
+          git config --global user.name TiagoMadeira
           echo ${{github.event.inputs.image}}
       
       - name: update gitops repository

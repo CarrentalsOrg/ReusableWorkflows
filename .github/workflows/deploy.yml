@@ -28,7 +28,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: CarrentalsOrg/CarrentalsK8sConfig
-          ref: master
           token: ${{secrets.gitops_token}}
       
       - name: setup git config

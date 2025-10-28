@@ -41,7 +41,7 @@ jobs:
           tags: |
             ${{steps.extract_metadata.outputs.branch}}
             ${{steps.extract_metadata.outputs.branch_tag}}
-            ${{steps.extract_metadata.outputs.sha_short}}
+            ${{ github.sha:0:7 }}
             
 
       - name: Set up Docker Buildx

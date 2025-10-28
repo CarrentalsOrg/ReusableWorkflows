@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
           echo "branch_tag =${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "short_sha=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
         id: extract_metadata
 
       - name: Docker meta
@@ -41,7 +41,7 @@ jobs:
           tags: |
             ${{steps.extract_metadata.outputs.branch}}
             ${{steps.extract_metadata.outputs.branch_tag}}
-            ${{ github.sha:0:7 }}
+            ${{steps.extract_metadata.outputs.short_sha}}
             
 
       - name: Set up Docker Buildx

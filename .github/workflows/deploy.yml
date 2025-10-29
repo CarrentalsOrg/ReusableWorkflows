@@ -12,10 +12,6 @@ on:
         type: string
         required: true
         description: "Tag or sha of the image you wish to deploy"
-      dockerhub_repo:
-        type: string
-        required: true
-        description: "Docker hub repo from which to pull the image"
     secrets:
       gitops_token:
         required: true
@@ -42,7 +38,7 @@ jobs:
         run: |
           cd ${{github.event.inputs.environment}}
 
-          sed -i "s|image: tiagomadeiradock/${{github.event.inputs.dockerhub_repo}}:.*|image: tiagomadeiradock/${{github.event.inputs.dockerhub_repo}}:${{github.event.inputs.image}}|g" deployment.yml
+          sed -i "s|image: tiagomadeiradock/railscarrentalsapi:.*|image: tiagomadeiradock/railscarrentalsapi:${{github.event.inputs.image}}|g" deployment.yml
 
           #commit changes
           git add deployment.yml

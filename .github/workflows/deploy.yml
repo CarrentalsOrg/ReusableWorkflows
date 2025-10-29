@@ -45,4 +45,4 @@ jobs:
           git commit -m "Deploy image ${{github.event.inputs.image}} to ${{github.event.inputs.environment}} environment"
           
           #push
-          git push origin master
+          git push origin main

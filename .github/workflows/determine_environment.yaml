@@ -18,15 +18,15 @@ jobs:
       - name: Select environment
         id: select-environment
         run: |
-          if [ "${{ steps.extract_branch.outputs.branch }}" == "master" ]; then
-            echo "production"
-            echo "selected-environment=production" >> "$GITHUB_OUTPUT"
+          if [ "${{ contains(steps.extract_branch.outputs.branch, 'feature') }}" ]; then
+            echo "development"
+            echo "selected-environment=development" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.extract_branch.outputs.branch }}" == "development" ]; then
             echo "staging"
             echo "selected-environment=staging" >> "$GITHUB_OUTPUT"
           else
-            echo "development"
-            echo "selected-environment=development" >> "$GITHUB_OUTPUT"
+            echo "production"
+            echo "selected-environment=production" >> "$GITHUB_OUTPUT"
           fi
     outputs:
       selected-environment: ${{ steps.select-environment.outputs.selected-environment }}
